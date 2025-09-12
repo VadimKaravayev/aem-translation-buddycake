@@ -1,0 +1,7 @@
+{
+    "scripts": [
+        "create path (sling:OrderedFolder) /content/dam/buddycake",
+        "create path (nt:unstructured) /content/dam/buddycake/jcr:content",
+        "set properties on /content/dam/buddycake/jcr:content\n  set cq:conf{String} to /conf/buddycake\n  set jcr:title{String} to \"BuddyCake Translation Connector Project\"\nend"
+    ]
+}

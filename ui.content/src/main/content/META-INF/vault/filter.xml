@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/conf/buddycake" mode="merge"/>
+    <filter root="/content/buddycake" mode="merge"/>
+    <filter root="/content/dam/buddycake" mode="merge">
+        <exclude pattern="/content/dam/buddycake(/.*)?"/>
+        <include pattern="/content/dam/buddycake/jcr:content(/.*)?"/>
+    </filter>
+    <filter root="/content/dam/buddycake/asset.jpg" mode="merge"/>
+    <filter root="/content/experience-fragments/buddycake" mode="merge"/>
+</workspaceFilter>

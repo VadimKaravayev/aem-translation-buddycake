@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/apps/buddycake/clientlibs"/>
+    <filter root="/apps/buddycake/components"/>
+    <filter root="/apps/buddycake/i18n"/>
+</workspaceFilter>

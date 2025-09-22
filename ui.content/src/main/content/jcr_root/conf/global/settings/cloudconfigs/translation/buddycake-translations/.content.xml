@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+          jcr:primaryType="cq:Page">
+    <jcr:content
+        jcr:primaryType="cq:PageContent"
+        cq:configTemplate="/apps/buddycake/translation/templates/servicepage"
+        descriptionPath="/apps/buddycake/translation/description.html"
+        editformPath="/apps/buddycake/translation/editform.html"
+        description="BuddyCake Translation Connector"
+        descriptionExtended="BuddyCake Translator provides translation of different types of content into a specific language."
+        defaultName="buddycake-translations-default"
+        mergeList="true"
+        allowMultiple="{Boolean}true"
+        jcr:title="BuddyCake Translator"
+        jcr:description="BuddyCake Translation Connector. The Best one."
+        thumbnailPath="/apps/buddycake/translation/templates/buddylogo.png"
+        sling:resourceType="cq/cloudserviceconfigs/components/servicepage"/>
+
+
+</jcr:root>

@@ -3,4 +3,5 @@
     <filter root="/apps/buddycake/clientlibs"/>
     <filter root="/apps/buddycake/components"/>
     <filter root="/apps/buddycake/i18n"/>
+    <filter root="/apps/buddycake/translation"/>
 </workspaceFilter>

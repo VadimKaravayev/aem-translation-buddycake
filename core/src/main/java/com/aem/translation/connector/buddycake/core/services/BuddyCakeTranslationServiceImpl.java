@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.Map;
 
 public class BuddyCakeTranslationServiceImpl extends AbstractTranslationService implements TranslationService {
-    protected BuddyCakeTranslationServiceImpl(Map<String, String> availableLanguageMap, Map<String, String> availableCategoryMap, String name, String label, String attribution, String translationCloudConfigRootPath, TranslationConstants.TranslationMethod supportedTranslationMethod, TranslationConfig tc) {
-        super(availableLanguageMap, availableCategoryMap, name, label, attribution, translationCloudConfigRootPath, supportedTranslationMethod, tc);
+    protected BuddyCakeTranslationServiceImpl(Map<String, String> availableLanguageMap, Map<String, String> availableCategoryMap, String factoryName, String label, String attribution, String translationCloudConfigRootPath, TranslationConstants.TranslationMethod supportedTranslationMethod, TranslationConfig tc) {
+        super(availableLanguageMap, availableCategoryMap, factoryName, label, attribution, translationCloudConfigRootPath, supportedTranslationMethod, tc);
     }
 
     @Override

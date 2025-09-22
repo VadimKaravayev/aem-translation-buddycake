@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspaceFilter version="1.0">
     <filter root="/conf/buddycake" mode="merge"/>
+    <filter root="/conf/global/settings/cloudconfigs/translation/buddycake-translations" mode="update"/>
     <filter root="/content/buddycake" mode="merge"/>
     <filter root="/content/dam/buddycake" mode="merge">
         <exclude pattern="/content/dam/buddycake(/.*)?"/>

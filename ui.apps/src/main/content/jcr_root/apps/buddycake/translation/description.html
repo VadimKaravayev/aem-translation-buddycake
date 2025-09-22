@@ -1,0 +1,12 @@
+<sly data-sly-use.config="com.aem.translation.connector.buddycake.core.models.BuddyCakeTranslationConnector">
+    <div class="description">
+        <div class="coral-Form-fieldwrapper">
+            <i>${config.description}</i>
+        </div>
+    </div>
+    <div data-sly-test="${config.extendedDescription}" class="extendedDescription">
+        <div class="coral-Form-fieldwrapper">
+            ${config.extendedDescription @i18n, locale=request.locale}
+        </div>
+    </div>
+</sly>

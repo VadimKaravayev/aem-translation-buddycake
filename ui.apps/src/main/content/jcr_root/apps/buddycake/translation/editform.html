@@ -1,1 +1,34 @@
-<div>Edit Form</div>
+<sly data-sly-use.config="com.aem.translation.connector.buddycake.core.models.BuddyCakeTranslationConnector">
+    <form id="services-editor-form" method="post" action="${config.formAction}" class="coral-form coral-Form--vertical foundation-form" data-foundation-form-ajax="true" data-foundation-form-loadingmask="true">
+
+        <input type="hidden" name="configOverlayPath" value="${config.confOverlayPath}"/>
+        <h3 class="coral-Form-fieldset-legend">${'BuddyCake Translation Connector Settings' @i18n, locale=request.locale}</h3>
+        <sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html" />
+        <sly data-sly-call="${clientlib.css @ categories='microsoft.translation.connector.editor'}" />
+        <sly data-sly-call="${clientlib.js @ categories='microsoft.translation.connector.editor'}" />
+        <div class="coral-Form-fieldwrapper">
+            <label class="coral-Form-fieldlabel">${'Translation Label' @i18n, locale=request.locale}</label>
+            <input class="coral-Form-field coral-Textfield" type="text" name="./servicelabel" value="${config.serviceLabel}" is="coral-textfield" aria-invalid="false">
+        </div>
+        <div class="coral-Form-fieldwrapper">
+            <label class="coral-Form-fieldlabel">${'Translation Attribution' @i18n, locale=request.locale}</label>
+            <input class="coral-Form-field coral-Textfield" type="text" is="coral-textfield" placeholder="${'Enter translation attribution' @i18n, locale=request.locale}" name="./serviceattribution" value="${config.serviceAttribution}">
+        </div>
+        <div class="coral-Form-fieldwrapper">
+            <label class="coral-Form-fieldlabel">${'Workspace ID' @i18n, locale=request.locale}</label>
+            <input class="coral-Form-field coral-Textfield" type="text" is="coral-textfield" placeholder="${'Enter workspace id' @i18n, locale=request.locale}" name="./workspaceId" value="${config.workspaceId}">
+        </div>
+        <div class="coral-Form-fieldwrapper">
+            <label class="coral-Form-fieldlabel">${'Endpoint URL' @i18n, locale=request.locale} *</label>
+            <input class="coral-Form-field coral-Textfield endpointUrl" type="text" is="coral-textfield" placeholder="${'Enter Endpoint URL' @i18n, locale=request.locale}" name="./endpointUrl" value="${config.endpointUrl != ''? config.endpointUrl : 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'}" required>
+        </div>
+        <div class="coral-Form-fieldwrapper">
+            <label class="coral-Form-fieldlabel">${'Subscription Key' @i18n, locale=request.locale} *</label>
+            <input class="coral-Form-field coral-Textfield subscriptionKey" type="text" is="coral-textfield" data-sly-attribute.placeholder="${config.subscriptionKey != '' ? '********************' : 'Enter subscription key' @i18n, locale=request.locale}"
+                   data-sly-attribute.required="${config.subscriptionKey == ''}">
+        </div>
+    </form>
+    <div class="coral-Form-fieldwrapper">
+        <button is="coral-button" class="microsoftConnectSubscription" iconsize="S" variant="primary" disabled="${config.getConnectEnabled}">${'Connect' @i18n, locale=request.locale}</button>
+    </div>
+</sly>

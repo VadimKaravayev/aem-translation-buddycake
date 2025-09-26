@@ -18,22 +18,28 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Optional;
 
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_CLIENT_ID;
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_CLIENT_SECRET;
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_GENERATE_TOKEN_URL;
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_JCR_DESCRIPTION;
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_SERVICE_ATTRIBUTION;
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_SERVICE_LABEL;
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_WORKSPACE_ID;
+
 @Slf4j
 @Model(adaptables = SlingHttpServletRequest.class)
 public class BuddyCakeTranslationConnector {
 
-    public static final String JCR_DESCRIPTION_PROP = "jcr:description";
+
     public static final String DESCRIPTION_EXTENDED_PROP = "descriptionExtended";
     public static final String CONFIG_NODE_RESOURCE_TYPE = "cq/translation/components/mt-cloudconfig";
-    public static final String SERVICE_LABEL_PROP = "servicelabel";
-    public static final String SERVICE_ATTRIBUTION_PROP = "serviceattribution";
 
     @Self
     private SlingHttpServletRequest request;
     private ValueMap configProps = ValueMap.EMPTY;
     private ValueMap rootConfigProps = ValueMap.EMPTY;
     @Getter
-    private String confOverlayPath;
+    private String translationConnectorConfigPath;
 
     @PostConstruct
     public void init() {
@@ -42,7 +48,7 @@ public class BuddyCakeTranslationConnector {
         if (configPage == null) {
            return;
         }
-        confOverlayPath = configPage.getContentResource().getPath();
+        translationConnectorConfigPath = configPage.getContentResource().getPath();
         configProps = getConfigProps(configPage);
         rootConfigProps = getRootConfigProps(configPage);
 
@@ -83,7 +89,7 @@ public class BuddyCakeTranslationConnector {
     }
 
     public String getDescription() {
-        return rootConfigProps.get(JCR_DESCRIPTION_PROP, StringUtils.EMPTY);
+        return rootConfigProps.get(PROP_JCR_DESCRIPTION, StringUtils.EMPTY);
     }
 
     public String getExtendedDescription() {
@@ -95,10 +101,26 @@ public class BuddyCakeTranslationConnector {
     }
 
     public String getServiceLabel() {
-        return configProps.get(SERVICE_LABEL_PROP, StringUtils.EMPTY);
+        return configProps.get(PROP_SERVICE_LABEL, StringUtils.EMPTY);
     }
 
     public String getServiceAttribution() {
-        return configProps.get(SERVICE_ATTRIBUTION_PROP, StringUtils.EMPTY);
+        return configProps.get(PROP_SERVICE_ATTRIBUTION, StringUtils.EMPTY);
+    }
+
+    public String getWorkspaceId() {
+        return configProps.get(PROP_WORKSPACE_ID, StringUtils.EMPTY);
+    }
+
+    public String getGenerateTokenUrl() {
+        return configProps.get(PROP_GENERATE_TOKEN_URL, StringUtils.EMPTY);
+    }
+
+    public String getClientId() {
+        return configProps.get(PROP_CLIENT_ID, StringUtils.EMPTY);
+    }
+
+    public String getClientSecret() {
+        return configProps.get(PROP_CLIENT_SECRET, StringUtils.EMPTY);
     }
 }

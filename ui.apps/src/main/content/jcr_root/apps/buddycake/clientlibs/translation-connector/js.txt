@@ -1,0 +1,1 @@
+js/translation-connector.js

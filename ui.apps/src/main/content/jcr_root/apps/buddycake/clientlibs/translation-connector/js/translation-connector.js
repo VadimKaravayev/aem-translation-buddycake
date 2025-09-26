@@ -1,0 +1,1 @@
+console.log('BuddyCake Translation Connector clientlib');

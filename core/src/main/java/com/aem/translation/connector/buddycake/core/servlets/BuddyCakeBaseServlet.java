@@ -1,19 +1,23 @@
 package com.aem.translation.connector.buddycake.core.servlets;
 
 import com.aem.translation.connector.buddycake.core.dto.ErrorResponseBody;
+import com.aem.translation.connector.buddycake.core.exceptions.BuddyCakeHttpConnectorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.servlets.post.JSONResponse;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.sling.api.servlets.HttpConstants.METHOD_POST;
 
 @Slf4j
 public abstract class BuddyCakeBaseServlet extends SlingAllMethodsServlet {
@@ -21,41 +25,45 @@ public abstract class BuddyCakeBaseServlet extends SlingAllMethodsServlet {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
+    protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response) throws ServletException, IOException {
+        doResponse(request, response);
+    }
+
+    @Override
     protected void doPost(final SlingHttpServletRequest request, final SlingHttpServletResponse response) throws ServletException, IOException {
         doResponse(request, response);
     }
 
     private void doResponse(final SlingHttpServletRequest request, final SlingHttpServletResponse response) throws IOException {
+        setResponseHeaders(response);
         try {
-            int responseStatusCode = getStatusCodeBasedOnMethod(request.getMethod());
-            response.setStatus(responseStatusCode);
-            writeJsonOutput(request, response);
-        } catch (IOException e) {
+            writeJsonOutput(response, () -> handleRequest(request));
+            response.setStatus(resolveStatusCode(request.getMethod()));
+        } catch (BuddyCakeHttpConnectorException e) {
             log.error(e.getMessage(), e);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            setResponseHeaders(response);
 
-            try (ServletOutputStream outputStream = response.getOutputStream()) {
-                MAPPER.writeValue(outputStream, new ErrorResponseBody(e.getMessage()));
-            }
+            writeJsonOutput(response, () -> ErrorResponseBody.from(e, request.getRequestURI()));
+            response.setStatus(e.getStatus());
         }
     }
 
-    private int getStatusCodeBasedOnMethod(final String httpMethod) {
-        switch (httpMethod) {
-            case HttpConstants.METHOD_POST:
-                return HttpServletResponse.SC_CREATED;
-            default:
-                return HttpServletResponse.SC_OK;
-        }
+    private int resolveStatusCode(final String httpMethod) {
+        final Map<String, Integer> statusMap = Map.of(
+                METHOD_POST, SC_CREATED);
+        return statusMap.getOrDefault(httpMethod, SC_OK);
     }
 
     private void writeJsonOutput(final SlingHttpServletRequest request, final SlingHttpServletResponse response) throws IOException {
-        setResponseHeaders(response);
-        try (ServletOutputStream outputStream = response.getOutputStream()) {
-            Object result = handleRequest(request);
-            MAPPER.writeValue(outputStream, result);
-        }
+        Object payload = handleRequest(request);
+        response.getWriter().write(MAPPER.writeValueAsString(payload));
+    }
+
+    private void writeJsonOutput(final SlingHttpServletResponse response, final Object payload) throws IOException {
+        response.getWriter().write(MAPPER.writeValueAsString(payload));
+    }
+
+    private void writeJsonOutput(final SlingHttpServletResponse response, final Supplier<Object> payloadSupplier) throws IOException {
+        response.getWriter().write(MAPPER.writeValueAsString(payloadSupplier.get()));
     }
 
     protected abstract Object handleRequest(final SlingHttpServletRequest request);

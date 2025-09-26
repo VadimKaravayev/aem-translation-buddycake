@@ -19,6 +19,7 @@ import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_T
 
 import javax.annotation.PostConstruct;
 
+import lombok.Getter;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Default;
@@ -45,6 +46,7 @@ public class HelloWorldModel {
     @SlingObject
     private ResourceResolver resourceResolver;
 
+    @Getter
     private String message;
 
     @PostConstruct
@@ -57,10 +59,6 @@ public class HelloWorldModel {
         message = "Hello World!\n"
             + "Resource type is: " + resourceType + "\n"
             + "Current page is:  " + currentPagePath + "\n";
-    }
-
-    public String getMessage() {
-        return message;
     }
 
 }

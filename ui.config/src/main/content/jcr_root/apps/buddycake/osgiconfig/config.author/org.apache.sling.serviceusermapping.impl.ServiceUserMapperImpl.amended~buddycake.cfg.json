@@ -1,0 +1,5 @@
+{
+  "user.mapping": [
+    "aem-translation-buddycake.core:buddycake-translation-connector-service=[buddycake-translation-connector-service]"
+  ]
+}

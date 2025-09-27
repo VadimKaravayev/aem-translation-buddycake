@@ -2,6 +2,9 @@
     "scripts": [
         "create path (sling:OrderedFolder) /content/dam/buddycake",
         "create path (nt:unstructured) /content/dam/buddycake/jcr:content",
-        "set properties on /content/dam/buddycake/jcr:content\n  set cq:conf{String} to /conf/buddycake\n  set jcr:title{String} to \"BuddyCake Translation Connector Project\"\nend"
+        "set properties on /content/dam/buddycake/jcr:content\n  set cq:conf{String} to /conf/buddycake\n  set jcr:title{String} to \"BuddyCake Translation Connector Project\"\nend",
+        "create path (sling:OrderedFolder) /var/buddycake-tms",
+        "create service user buddycake-translation-connector-service",
+        "set ACL for buddycake-translation-connector-service\n allow jcr:read on /conf\n allow jcr:read on /apps/buddycake/translation/resources\n allow jcr:all on /var/buddycake-tms\n end"
     ]
 }

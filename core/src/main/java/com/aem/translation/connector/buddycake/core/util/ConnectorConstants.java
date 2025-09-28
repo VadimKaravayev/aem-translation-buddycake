@@ -11,5 +11,7 @@ public final class ConnectorConstants {
     public static final String PROP_WORKSPACE_ID = "workspaceId";
     public static final String PROP_GENERATE_TOKEN_URL = "generateTokenUrl";
     public static final String PROP_JCR_DESCRIPTION = "jcr:description";
+    public static final String PROP_CATEGORY_MAPPING = "categoryMapping";
+    public static final String PROP_LANGUAGE_MAPPING = "languageMapping";
 
 }

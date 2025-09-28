@@ -7,7 +7,12 @@ import com.adobe.granite.translation.api.TranslationService;
 import com.adobe.granite.translation.api.TranslationServiceFactory;
 import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 import com.aem.translation.connector.buddycake.core.config.BuddyCakeTranslationCloudConfig;
+import com.aem.translation.connector.buddycake.core.util.StreamUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -19,10 +24,15 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-@Component(service = TranslationServiceFactory.class, immediate = true, property = {
-        TranslationServiceFactory.PROPERTY_TRANSLATION_FACTORY + "=" + "buddycake"
-})
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_CATEGORY_MAPPING;
+import static com.aem.translation.connector.buddycake.core.util.ConnectorConstants.PROP_LANGUAGE_MAPPING;
+
+@Slf4j
+@Component(service = TranslationServiceFactory.class, immediate = true)
 @ServiceDescription("Factory for buddycake translation service")
 @ServiceVendor("Buddy Cake Inc")
 @Designate(ocd = BuddyCakeTranslationServiceFactoryImpl.BuddyCakeTranslationServiceFactoryConfig.class)
@@ -37,32 +47,35 @@ public class BuddyCakeTranslationServiceFactoryImpl implements TranslationServic
     @Reference
     private TranslationConfig translationConfig;
 
+    @Reference
+    private ServiceUserResourceResolverProvider resolverProvider;
+
     private BuddyCakeTranslationServiceFactoryConfig factoryConfig;
 
     @Activate
     protected void activate(final BuddyCakeTranslationServiceFactoryConfig config) {
         this.factoryConfig = config;
-
-
-        availableLanguageMap = Map.of();
-        availableCategoryMap = Map.of();
+        availableLanguageMap = getConnectorPropertyMap(factoryConfig.language_mapping_location(), PROP_LANGUAGE_MAPPING);
+        availableCategoryMap = getConnectorPropertyMap(factoryConfig.category_mapping_location(), PROP_CATEGORY_MAPPING);
     }
 
     @Override
     public TranslationService createTranslationService(TranslationConstants.TranslationMethod translationMethod, String cloudConfigPath, Resource resource) throws TranslationException {
-        BuddyCakeTranslationCloudConfig mainConfig = (BuddyCakeTranslationCloudConfig) cloudConfigUtil.getCloudConfigObjectFromPath(BuddyCakeTranslationCloudConfig.class, cloudConfigPath);
-        //mainConfig.getServiceLabel()
 
-        //Label name appears in an AEM translation project 'Translation provider dropdown'
+        final var connectorConfig = Optional.ofNullable(cloudConfigUtil.getCloudConfigObjectFromPath(resource, getServiceCloudConfigClass(), cloudConfigPath))
+                .map(obj -> (BuddyCakeTranslationCloudConfig) obj)
+                .orElse(BuddyCakeTranslationCloudConfig.getEmptyConfig());
+
         return new BuddyCakeTranslationServiceImpl(
                 availableLanguageMap,
                 availableCategoryMap,
                 factoryConfig.factory_name(),
-                "Buddycake Translations",
-                "fake-attributation",
+                connectorConfig.getServiceLabel(),
+                connectorConfig.getServiceAttribution(),
                 factoryConfig.translation_cloud_config_root_path(),
                 TranslationConstants.TranslationMethod.HUMAN_TRANSLATION,
                 translationConfig);
+
     }
 
     @Override
@@ -81,8 +94,34 @@ public class BuddyCakeTranslationServiceFactoryImpl implements TranslationServic
     }
 
     @Override
-    public Class<?> getServiceCloudConfigClass() {
+    public Class<BuddyCakeTranslationCloudConfig> getServiceCloudConfigClass() {
         return BuddyCakeTranslationCloudConfig.class;
+    }
+
+    private Map<String, String> getConnectorPropertyMap(final String resourceLocation, final String propertyName) {
+        try (final var resolver = resolverProvider.getTranslationConnectorResourceResolver()) {
+            Resource resource = resolver.getResource(resourceLocation);
+            if (resource == null) {
+                log.info("Resource does not exists for path: {}", resourceLocation);
+                return Map.of();
+            }
+
+            Function<Resource, String> getMappingProp = res -> {
+                var valueMap = ResourceUtil.getValueMap(res);
+                return valueMap.get(propertyName, StringUtils.EMPTY);
+            };
+
+
+            return StreamUtils.stream(resource.listChildren())
+                    .collect(Collectors.toMap(
+                            Resource::getName,
+                            getMappingProp,
+                            (current, next) -> current));
+
+        } catch (LoginException e) {
+            log.error("Failed to get resource {}, error message {}", resourceLocation, e.getMessage(), e);
+            return Map.of();
+        }
     }
 
     @ObjectClassDefinition(name  = "Config for BuddyCake Translation Service Factory")

@@ -10,11 +10,14 @@ import com.aem.translation.connector.buddycake.core.config.BuddyCakeTranslationC
 import com.aem.translation.connector.buddycake.core.util.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.osgi.services.HttpClientBuilderFactory;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.propertytypes.ServiceDescription;
 import org.osgi.service.component.propertytypes.ServiceVendor;
@@ -22,6 +25,7 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,9 +42,6 @@ import static com.aem.translation.connector.buddycake.core.util.ConnectorConstan
 @Designate(ocd = BuddyCakeTranslationServiceFactoryImpl.BuddyCakeTranslationServiceFactoryConfig.class)
 public class BuddyCakeTranslationServiceFactoryImpl implements TranslationServiceFactory {
 
-    private Map<String, String> availableLanguageMap;
-    private Map<String, String> availableCategoryMap;
-
     @Reference
     private TranslationCloudConfigUtil cloudConfigUtil;
 
@@ -50,13 +51,31 @@ public class BuddyCakeTranslationServiceFactoryImpl implements TranslationServic
     @Reference
     private ServiceUserResourceResolverProvider resolverProvider;
 
+    @Reference
+    private HttpClientBuilderFactory httpClientBuilderFactory;
+
+    private Map<String, String> availableLanguageMap;
+    private Map<String, String> availableCategoryMap;
     private BuddyCakeTranslationServiceFactoryConfig factoryConfig;
+    private CloseableHttpClient httpClient;
+
 
     @Activate
     protected void activate(final BuddyCakeTranslationServiceFactoryConfig config) {
         this.factoryConfig = config;
         availableLanguageMap = getConnectorPropertyMap(factoryConfig.language_mapping_location(), PROP_LANGUAGE_MAPPING);
         availableCategoryMap = getConnectorPropertyMap(factoryConfig.category_mapping_location(), PROP_CATEGORY_MAPPING);
+
+        httpClient = httpClientBuilderFactory.newBuilder().build();
+    }
+
+    @Deactivate
+    protected void deactivate() {
+        try {
+            httpClient.close();
+        } catch (IOException e) {
+            log.error("Failed to close httpClient, {}", e.getMessage(), e);
+        }
     }
 
     @Override

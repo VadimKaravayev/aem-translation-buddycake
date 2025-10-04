@@ -1,4 +1,4 @@
-package com.aem.translation.connector.buddycake.core.servlets;
+package com.aem.translation.connector.buddycake.core.servlets.annotations;
 
 import org.osgi.service.component.annotations.ComponentPropertyType;
 

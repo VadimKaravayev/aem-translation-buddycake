@@ -3,6 +3,7 @@ package com.aem.translation.connector.buddycake.core.servlets;
 import com.adobe.granite.crypto.CryptoException;
 import com.adobe.granite.crypto.CryptoSupport;
 import com.aem.translation.connector.buddycake.core.exceptions.BuddyCakeHttpConnectorException;
+import com.aem.translation.connector.buddycake.core.servlets.annotations.SlingServletMethods;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component(service = Servlet.class)
 @SlingServletPathsStrict(paths = BuddyCakeTranslationConfigEncryptionServlet.TRANSLATION_CONFIG_ENCRYPTION_SERVLET_PATH)
-@SlingServletMethods(HttpConstants.METHOD_POST)
+@SlingServletMethods(value = HttpConstants.METHOD_POST)
 public class BuddyCakeTranslationConfigEncryptionServlet extends BuddyCakeBaseServlet {
 
     public static final String TRANSLATION_CONFIG_ENCRYPTION_SERVLET_PATH = "/bin/buddycake/translation/config/encrypt";
@@ -89,7 +90,8 @@ public class BuddyCakeTranslationConfigEncryptionServlet extends BuddyCakeBaseSe
 
         return Map.of(
                 "message",
-                "Successfully saved config properties under path: " + translationConnectorConfigPath);
+                "Successfully saved config properties under path: " + translationConnectorConfigPath
+        );
     }
 
     private Map<String, String> collectParamsForEncryption(final SlingHttpServletRequest request) {

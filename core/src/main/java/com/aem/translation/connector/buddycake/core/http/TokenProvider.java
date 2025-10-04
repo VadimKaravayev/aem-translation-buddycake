@@ -1,7 +1,6 @@
 package com.aem.translation.connector.buddycake.core.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -19,11 +18,13 @@ import java.util.List;
 
 import static com.adobe.granite.rest.Constants.CT_JSON;
 import static com.adobe.granite.rest.Constants.CT_WWW_FORM_URLENCODED;
-import static org.apache.http.HttpStatus.SC_OK;
+import static com.aem.translation.connector.buddycake.core.util.JsonUtil.readTree;
 
 public class TokenProvider {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final int TiME_OFFSET = 60;
+    public static final String ACCESS_TOKEN_PROP = "access_token";
+    public static final String EXPIRES_IN_PROP = "expires_in";
 
     private final String clientId;
     private final String clientSecret;
@@ -62,15 +63,15 @@ public class TokenProvider {
 
         try (CloseableHttpResponse response = httpClient.execute(post)) {
             int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode != SC_OK) {
+            if (statusCode / 100 != 2) {
                 throw new IOException("Failed to fetch token, status: " + statusCode);
             }
 
             try (InputStream content = response.getEntity().getContent()) {
-                JsonNode json = MAPPER.readTree(content);
-                accessToken = json.get("access_token").asText();
-                long expiresIn = json.get("expires_in").asLong();
-                expiryTime = Instant.now().plusSeconds(expiresIn - 60);
+                final JsonNode json = readTree(content);
+                accessToken = json.get(ACCESS_TOKEN_PROP).asText();
+                final long expiresIn = json.get(EXPIRES_IN_PROP).asLong();
+                expiryTime = Instant.now().plusSeconds(expiresIn - TiME_OFFSET);
             }
         }
     }

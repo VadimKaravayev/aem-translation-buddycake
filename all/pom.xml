@@ -67,6 +67,11 @@
                         </embedded>
                         <embedded>
                             <groupId>com.aem.translation.connector</groupId>
+                            <artifactId>aem-translation-buddycake.core-kotlin</artifactId>
+                            <target>/apps/buddycake-packages/application/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>com.aem.translation.connector</groupId>
                             <artifactId>aem-translation-buddycake.ui.content</artifactId>
                             <type>zip</type>
                             <target>/apps/buddycake-packages/content/install</target>
@@ -76,6 +81,11 @@
                             <artifactId>aem-translation-buddycake.ui.config</artifactId>
                             <type>zip</type>
                             <target>/apps/buddycake-packages/application/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>org.jetbrains.kotlin</groupId>
+                            <artifactId>kotlin-osgi-bundle</artifactId>
+                            <target>/apps/buddycake-vendor-packages/application/install</target>
                         </embedded>
                     </embeddeds>
                 </configuration>
@@ -196,6 +206,14 @@
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
-
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-osgi-bundle</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aem.translation.connector</groupId>
+            <artifactId>aem-translation-buddycake.core-kotlin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

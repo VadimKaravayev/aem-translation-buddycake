@@ -2,7 +2,6 @@ package com.aem.translation.connector.buddycake.core.servlets;
 
 import com.aem.translation.connector.buddycake.core.dto.ErrorResponseBody;
 import com.aem.translation.connector.buddycake.core.exceptions.BuddyCakeHttpConnectorException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -15,14 +14,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static com.aem.translation.connector.buddycake.core.util.JsonUtil.getMapper;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.sling.api.servlets.HttpConstants.METHOD_POST;
 
 @Slf4j
 public abstract class BuddyCakeBaseServlet extends SlingAllMethodsServlet {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
     protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response) throws ServletException, IOException {
@@ -55,15 +53,15 @@ public abstract class BuddyCakeBaseServlet extends SlingAllMethodsServlet {
 
     private void writeJsonOutput(final SlingHttpServletRequest request, final SlingHttpServletResponse response) throws IOException {
         Object payload = handleRequest(request);
-        response.getWriter().write(MAPPER.writeValueAsString(payload));
+        response.getWriter().write(getMapper().writeValueAsString(payload));
     }
 
     private void writeJsonOutput(final SlingHttpServletResponse response, final Object payload) throws IOException {
-        response.getWriter().write(MAPPER.writeValueAsString(payload));
+        response.getWriter().write(getMapper().writeValueAsString(payload));
     }
 
     private void writeJsonOutput(final SlingHttpServletResponse response, final Supplier<Object> payloadSupplier) throws IOException {
-        response.getWriter().write(MAPPER.writeValueAsString(payloadSupplier.get()));
+        response.getWriter().write(getMapper().writeValueAsString(payloadSupplier.get()));
     }
 
     protected abstract Object handleRequest(final SlingHttpServletRequest request);

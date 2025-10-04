@@ -16,307 +16,174 @@
 --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
       
   <modelVersion>4.0.0</modelVersion>
-      
   <groupId>com.aem.translation.connector</groupId>
-      
   <artifactId>aem-translation-buddycake</artifactId>
-      
   <packaging>pom</packaging>
-      
   <version>0.0.1-SNAPSHOT</version>
-      
   <name>BuddyCake Translation Connector Project</name>
-      
   <description>BuddyCake Translation Connector Project</description>
       
   <modules>
-            
     <module>all</module>
-            
     <module>core</module>
-            
+    <module>core-kotlin</module>
     <module>ui.frontend</module>
-             
     <module>ui.apps</module>
-            
     <module>ui.apps.structure</module>
-            
     <module>ui.config</module>
-            
     <module>ui.content</module>
-            
     <module>it.tests</module>
-            
     <module>dispatcher</module>
-            
     <module>ui.tests</module>
-      
   </modules>
       
   <properties>
-            
     <aem.host>localhost</aem.host>
-            
     <aem.port>4502</aem.port>
-            
     <aem.publish.host>localhost</aem.publish.host>
-            
     <aem.publish.port>4503</aem.publish.port>
-            
     <sling.user>admin</sling.user>
-            
     <sling.password>admin</sling.password>
-            
     <vault.user>admin</vault.user>
-            
     <vault.password>admin</vault.password>
-            
     <frontend-maven-plugin.version>1.12.0</frontend-maven-plugin.version>
-            
     <core.wcm.components.version>2.26.0</core.wcm.components.version>
-            
     <bnd.version>6.4.0</bnd.version>
-            
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-            
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-            
     <aem.sdk.api>2025.8.22171.20250828T220440Z-250800</aem.sdk.api>
-            
     <aemanalyser.version>1.6.6</aemanalyser.version>
-            
     <componentGroupName>BuddyCake Translation Connector Project</componentGroupName>
-        
   </properties>
       
   <build>
-            
     <plugins>
                   
       <!-- Maven Release Plugin -->
                   
       <plugin>
-                        
         <groupId>org.apache.maven.plugins</groupId>
-                        
         <artifactId>maven-release-plugin</artifactId>
-                        
         <version>2.5.3</version>
-                        
         <configuration>
-                              
           <scmCommentPrefix>[maven-scm] :</scmCommentPrefix>
-                              
           <preparationGoals>clean install</preparationGoals>
-                              
           <goals>install</goals>
-                              
           <releaseProfiles>release</releaseProfiles>
-                          
         </configuration>
-                    
       </plugin>
                   
       <!-- Maven Source Plugin -->
                   
       <plugin>
-                        
         <groupId>org.apache.maven.plugins</groupId>
-                        
         <artifactId>maven-source-plugin</artifactId>
-                        
         <version>3.0.1</version>
-                        
         <inherited>true</inherited>
-                    
       </plugin>
                   
       <!-- Maven Enforcer Plugin -->
                   
       <plugin>
-                        
         <groupId>org.apache.maven.plugins</groupId>
-                        
         <artifactId>maven-enforcer-plugin</artifactId>
-                        
         <executions>
-                              
           <execution>
-                                    
             <id>enforce-maven</id>
-                                    
             <goals>
-                                          
               <goal>enforce</goal>
-                                      
             </goals>
-                                    
             <configuration>
-                                          
               <rules>
-                                                
                 <requireMavenVersion>
-                                                      
                   <version>[3.3.9,)</version>
-                                                  
                 </requireMavenVersion>
-                                                
                 <requireJavaVersion>
-                                                      
                   <message>Maven must be executed with a Java 11 JRE or higher.</message>
-                                                      
                   <version>11</version>
-                                                  
                 </requireJavaVersion>
-                                            
               </rules>
-                                      
             </configuration>
-                                
           </execution>
-                          
         </executions>
-                    
       </plugin>
                   
       <!-- Maven Compiler Plugin -->
                   
       <plugin>
-                        
         <groupId>org.apache.maven.plugins</groupId>
-                        
         <artifactId>maven-compiler-plugin</artifactId>
-                        
         <configuration>
-                              
           <release>11</release>
-                          
         </configuration>
-                    
       </plugin>
-              
     </plugins>
-            
     <pluginManagement>
-                  
       <plugins>
-                        
         <plugin>
-                              
           <groupId>org.apache.maven.plugins</groupId>
-                              
           <artifactId>maven-assembly-plugin</artifactId>
-                              
           <version>3.3.0</version>
-                              
           <configuration>
-                                    
             <tarLongFileMode>posix</tarLongFileMode>
-                                
           </configuration>
-                          
         </plugin>
-                        
         <plugin>
-                              
           <groupId>com.github.eirslett</groupId>
-                              
           <artifactId>frontend-maven-plugin</artifactId>
-                              
           <version>${frontend-maven-plugin.version}</version>
-                              
           <configuration>
-                                    
             <nodeVersion>v16.17.0</nodeVersion>
-                                    
             <npmVersion>8.15.0</npmVersion>
-                                
           </configuration>
-                              
           <executions>
-                                    
             <execution>
-                                          
               <id>install node and npm</id>
-                                          
               <goals>
-                                                
                 <goal>install-node-and-npm</goal>
-                                            
               </goals>
-                                      
             </execution>
-                                    
             <execution>
-                                          
               <id>npm ci</id>
-                                          
               <goals>
-                                                
                 <goal>npm</goal>
-                                            
               </goals>
-                                          
               <configuration>
-                                              
                 <arguments>ci</arguments>
-                                            
               </configuration>
-                                      
             </execution>
-                                
           </executions>
-                          
         </plugin>
                         
         <!-- Maven Jar Plugin -->
                         
         <plugin>
-                              
           <groupId>org.apache.maven.plugins</groupId>
-                              
           <artifactId>maven-jar-plugin</artifactId>
-                              
           <version>3.1.2</version>
-                          
         </plugin>
                         
         <!-- Maven Clean Plugin -->
                         
         <plugin>
-                              
           <groupId>org.apache.maven.plugins</groupId>
-                              
           <artifactId>maven-clean-plugin</artifactId>
-                              
           <version>3.0.0</version>
-                          
         </plugin>
                         
         <!-- BND Maven Plugin -->
                         
         <plugin>
-                              
           <groupId>biz.aQute.bnd</groupId>
-                              
           <artifactId>bnd-maven-plugin</artifactId>
-                              
           <version>${bnd.version}</version>
-                              
           <executions>
-                                    
             <execution>
-                                          
               <id>bnd-process</id>
-                                          
               <goals>
-                                                
                 <goal>bnd-process</goal>
-                                            
               </goals>
-                                          
               <configuration>
-                                                
                 <bnd>
                   <![CDATA[
 Bundle-Category: ${componentGroupName}
@@ -982,25 +849,16 @@ Bundle-DocURL:
     <dependencies>
                   
       <dependency>
-                        
         <groupId>com.adobe.aem</groupId>
-                        
         <artifactId>aem-sdk-api</artifactId>
-                        
         <version>${aem.sdk.api}</version>
-                        
         <scope>provided</scope>
-                    
       </dependency>
                   
       <dependency>
-                        
         <groupId>com.adobe.cq</groupId>
-                        
         <artifactId>core.wcm.components.core</artifactId>
-                        
         <version>${core.wcm.components.version}</version>
-                    
       </dependency>
                   
       <!-- Testing -->
@@ -1044,15 +902,10 @@ Bundle-DocURL:
       </dependency>
                   
       <dependency>
-                        
         <groupId>junit-addons</groupId>
-                        
         <artifactId>junit-addons</artifactId>
-                        
         <version>1.4</version>
-                        
         <scope>test</scope>
-                    
       </dependency>
                   
       <dependency>
@@ -1154,7 +1007,13 @@ Bundle-DocURL:
             <version>1.18.42</version>
             <scope>provided</scope>
         </dependency>
-              
+
+<!--        kotlin bundle -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-osgi-bundle</artifactId>
+            <version>2.2.20</version>
+        </dependency>
     </dependencies>
         
   </dependencyManagement>

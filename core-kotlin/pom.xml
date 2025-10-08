@@ -146,6 +146,17 @@ Import-Package: javax.annotation;version=0.0.0,*
             <artifactId>kotlin-osgi-bundle</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-datetime</artifactId>
+            <version>0.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-core</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

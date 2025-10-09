@@ -8,6 +8,7 @@ import com.adobe.granite.translation.api.TranslationServiceFactory;
 import com.adobe.granite.translation.core.TranslationCloudConfigUtil;
 import com.aem.translation.connector.buddycake.core.config.BuddyCakeTranslationCloudConfig;
 import com.aem.translation.connector.buddycake.core.util.StreamUtils;
+import com.ddy.kotlin.core.services.BuddyCakeTmsIntegrationServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -93,7 +94,8 @@ public class BuddyCakeTranslationServiceFactoryImpl implements TranslationServic
                 connectorConfig.getServiceAttribution(),
                 factoryConfig.translation_cloud_config_root_path(),
                 TranslationConstants.TranslationMethod.HUMAN_TRANSLATION,
-                translationConfig);
+                translationConfig,
+                new BuddyCakeTmsIntegrationServiceImpl());
 
     }
 

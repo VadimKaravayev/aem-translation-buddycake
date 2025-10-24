@@ -159,5 +159,8 @@ public class BuddyCakeTranslationServiceFactoryImpl implements TranslationServic
 
         @AttributeDefinition(name = "Category Map Location")
         String category_mapping_location() default "/apps/buddycake/translation/resources/categoryMapping";
+
+        @AttributeDefinition(name = "Category Map Location")
+        String tms_jobs_root() default "/var/buddycake-tms";
     }
 }

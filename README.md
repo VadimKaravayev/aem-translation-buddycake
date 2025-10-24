@@ -1,4 +1,4 @@
-# Sample AEM project template
+# BuddCake AEM Translation Connector
 
 This is a project template for AEM-based applications. It is intended as a best-practice set of examples as well as a potential starting point to develop your own functionality.
 
@@ -124,3 +124,16 @@ A ClientLib will consist of the following files and directories:
 The project comes with the auto-public repository configured. To setup the repository in your Maven settings, refer to:
 
     http://helpx.adobe.com/experience-manager/kb/SetUpTheAdobeMavenRepository.html
+
+🍰 BuddyCake Manifesto
+
+BuddyCake is a friendly ecosystem for creative automation.
+It’s where human intention, system intelligence, and digital craftsmanship meet.
+
+We believe that software should feel helpful, not overwhelming.
+That automation should amplify creativity, not replace it.
+And that every technical layer - no matter how deep - should keep a touch of warmth and play.
+
+BuddyCake connects tools like AEM, Google Drive, and AI services through a set of small, reliable, modular "buddies."
+Each Buddy knows one craft: baking content, mixing data, adding frosting, or keeping the flow smooth.
+Together they make digital creation feel like baking something wonderful: precise, repeatable, but still full of life.

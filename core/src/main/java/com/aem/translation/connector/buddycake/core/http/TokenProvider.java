@@ -1,5 +1,7 @@
 package com.aem.translation.connector.buddycake.core.http;
 
+import com.aem.translation.connector.buddycake.core.util.fp.CheckedRunnable;
+import com.aem.translation.connector.buddycake.core.util.fp.CheckedSupplier;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
@@ -11,10 +13,13 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 import static com.adobe.granite.rest.Constants.CT_JSON;
 import static com.adobe.granite.rest.Constants.CT_WWW_FORM_URLENCODED;
@@ -23,6 +28,8 @@ import static com.aem.translation.connector.buddycake.core.util.JsonUtil.readTre
 public class TokenProvider {
 
     private static final int TiME_OFFSET = 60;
+    private static final long INITIAL_BACKOFF_MS = 1000;
+    private static final int MAX_RETRIES = 3;
     public static final String ACCESS_TOKEN_PROP = "access_token";
     public static final String EXPIRES_IN_PROP = "expires_in";
 
@@ -43,7 +50,7 @@ public class TokenProvider {
 
     public synchronized String getToken() throws IOException {
         if (isExpired()) {
-            requestAccessToken();
+            retry(this::requestAccessToken);
         }
 
         return accessToken;
@@ -88,5 +95,41 @@ public class TokenProvider {
         return Base64.getEncoder()
                 .encodeToString((clientId + ":" + clientSecret)
                         .getBytes(StandardCharsets.UTF_8));
+    }
+
+    private <E extends Exception> void retry(CheckedRunnable<E> action) throws E {
+        retry(() -> {
+            action.run();
+            return null;
+        });
+    }
+
+    private <T, E extends Exception> T retry(CheckedSupplier<T, E> action) throws E {
+        E lastException = null;
+        long backoff = INITIAL_BACKOFF_MS;
+
+        for (int attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                return action.get();
+            } catch (Exception e) {
+                @SuppressWarnings("unchecked")
+                E typed = (E) e;
+                lastException = typed;
+
+                try {
+                    long sleepMs = backoff + (long) (Math.random() * 100);
+                    Thread.sleep(sleepMs);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+
+                    lastException.addSuppressed(ex);
+                    throw lastException;
+                }
+                backoff *= 2;
+            }
+        }
+
+
+        throw Objects.requireNonNull(lastException);
     }
 }

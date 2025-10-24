@@ -1,8 +1,12 @@
 package com.aem.translation.connector.buddycake.core.http;
 
+import com.day.cq.commons.PathInfo;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,11 +26,15 @@ class TokenProviderTest {
     }
 
     @Test
-    void name() {
-        HashMap<String, String> map = new HashMap<>();
-        boolean b = map.containsKey("");
+    void name() throws URISyntaxException {
+        String str = "/content/output/sites/en/adding-visual-impact-to-content-ditamap.html?wcmmode=disabled";
 
-        System.out.println(b);
+
+
+
+        PathInfo pathInfo = new PathInfo(str);
+        System.out.println(pathInfo.getResourcePath());
+        System.out.println(pathInfo.getExtension());
 
 
     }

@@ -87,6 +87,16 @@
                             <artifactId>kotlin-osgi-bundle</artifactId>
                             <target>/apps/buddycake-vendor-packages/application/install</target>
                         </embedded>
+                        <embedded>
+                            <groupId>org.apache.sling</groupId>
+                            <artifactId>org.apache.sling.servlet-helpers</artifactId>
+                            <target>/apps/buddycake-vendor-packages/application/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>org.jsoup</groupId>
+                            <artifactId>jsoup</artifactId>
+                            <target>/apps/buddycake-vendor-packages/application/install</target>
+                        </embedded>
                     </embeddeds>
                 </configuration>
             </plugin>
@@ -214,6 +224,14 @@
             <groupId>com.aem.translation.connector</groupId>
             <artifactId>aem-translation-buddycake.core-kotlin</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.servlet-helpers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
         </dependency>
     </dependencies>
 </project>

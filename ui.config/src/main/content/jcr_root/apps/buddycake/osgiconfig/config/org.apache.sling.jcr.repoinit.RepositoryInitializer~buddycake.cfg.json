@@ -5,6 +5,6 @@
         "set properties on /content/dam/buddycake/jcr:content\n  set cq:conf{String} to /conf/buddycake\n  set jcr:title{String} to \"BuddyCake Translation Connector Project\"\nend",
         "create path (sling:OrderedFolder) /var/buddycake-tms",
         "create service user buddycake-translation-connector-service",
-        "set ACL for buddycake-translation-connector-service\n allow jcr:read on /conf\n allow jcr:read on /apps/buddycake/translation/resources\n allow jcr:all on /var/buddycake-tms\n end"
+        "set ACL for buddycake-translation-connector-service\n allow jcr:read on /conf\n allow jcr:read on /apps/buddycake/translation/resources\n allow jcr:read on /home \nallow jcr:all on /var/buddycake-tms\n allow jcr:all on /content/projects\n allow jcr:all on /content/dam/projects\n allow jcr:all on /home/groups/projects\n allow jcr:read on /libs/cq/core/content/projects\n allow jcr:read on /content/output/sites\n end"
     ]
 }

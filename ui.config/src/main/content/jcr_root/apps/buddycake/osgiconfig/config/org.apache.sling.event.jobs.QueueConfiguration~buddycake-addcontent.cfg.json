@@ -1,0 +1,11 @@
+{
+  "queue.name": "BuddyCake Connector Add Translation Content to Translation Project",
+  "queue.priority": "NORM",
+  "queue.maxparallel": "10",
+  "queue.topics": [
+    "buddycake/translation/project/addcontent"
+  ],
+  "queue.retries": "10",
+  "queue.retrydelay": "60000",
+  "queue.type": "UNORDERED"
+}
